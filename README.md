@@ -92,6 +92,11 @@ Retailer channel = 71% sales but NP falling → Shift KPIs to Net Profit%.
 
 ## Demo
 ![Dashboard Preview](https://github.com/ADARSHRMISHRA/Business-Insight-360/blob/main/HOME%20PAGE%20OF%20THE%20PROJECT.png).
+![Dashboard Preview](https://github.com/ADARSHRMISHRA/Business-Insight-360/blob/main/FINANCE%20VIEW.png)
+![Dashboard Preview](https://github.com/ADARSHRMISHRA/Business-Insight-360/blob/main/SALES%20VIEW.png)
+![Dashboard Preview](https://github.com/ADARSHRMISHRA/Business-Insight-360/blob/main/MARKETING%20VIEW.png)
+![Dashboard Preview](https://github.com/ADARSHRMISHRA/Business-Insight-360/blob/main/SUPPLY%20CHAIN%20VIEW.png)
+![Dashboard Preview](https://github.com/ADARSHRMISHRA/Business-Insight-360/blob/main/EXECUTIVE20%VIEW.png)
 
 ⭐ *If you found this project insightful, give it a star on GitHub!*
 
