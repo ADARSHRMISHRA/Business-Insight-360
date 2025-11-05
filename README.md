@@ -1,5 +1,5 @@
 # Business-Insight-360
-# 💼 AtliQ Hardwares – Business 360 Power BI Dashboard
+# 💼 AtliQ Hardwares – Business Insight 360 Power BI Dashboard
 
 ![Power BI](https://img.shields.io/badge/Tool-Power%20BI-yellow?style=for-the-badge)
 ![Excel](https://img.shields.io/badge/Excel-Data%20Cleaning-green?style=for-the-badge)
