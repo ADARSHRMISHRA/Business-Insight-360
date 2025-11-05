@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "ee7b35056b14232d098d",
+  "position": {
+    "x": 19.547990897471863,
+    "y": 6.189926951172624,
+    "z": 1000,
+    "height": 939.21568627450972,
+    "width": 312.27344992050871,
+    "tabOrder": 1000
+  },
+  "visualGroup": {
+    "displayName": "filter pan text boxes",
+    "groupMode": "ScaleMode"
+  },
+  "parentGroupName": "c5a2be506235e8e0de4d"
+}

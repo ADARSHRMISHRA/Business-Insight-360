@@ -1,0 +1,43 @@
+table pre_invoice_deductions
+	lineageTag: eaa57840-dc59-4eb2-9b51-be69b96434b8
+
+	column customer_code
+		dataType: string
+		lineageTag: a34a73ad-2f45-49b4-afff-b2fd36f7fb42
+		summarizeBy: none
+		sourceColumn: customer_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column fiscal_year
+		dataType: string
+		lineageTag: ef5b86ff-5d30-443a-8342-d97f54cebc88
+		summarizeBy: none
+		sourceColumn: fiscal_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column pre_invoice_discount_pct
+		dataType: double
+		lineageTag: 02fadf08-5298-4f9c-bf82-f603b128bf19
+		summarizeBy: sum
+		sourceColumn: pre_invoice_discount_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition pre_invoice_deductions = m
+		mode: import
+		queryGroup: supported_facts
+		source =
+				let
+				    Source = MySQL.Database("localhost", "gdb056", [ReturnSingleDatabase=true]),
+				    gdb056_pre_invoice_deductions = Source{[Schema="gdb056",Item="pre_invoice_deductions"]}[Data]
+				in
+				    gdb056_pre_invoice_deductions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

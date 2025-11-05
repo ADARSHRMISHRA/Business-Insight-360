@@ -1,0 +1,48 @@
+table 'prm segment_category'
+	lineageTag: 2ae70c0d-fafd-4de4-8d3d-176399e87f40
+
+	column 'prm segment_category'
+		lineageTag: 14797f92-dd80-4e39-9139-cc43677550d5
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'prm segment_category Order'
+
+		relatedColumnDetails
+			groupByColumn: 'prm segment_category Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'prm segment_category Fields'
+		isHidden
+		lineageTag: e8e1e509-2e50-43f0-808b-f2c0d4b77b47
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'prm segment_category Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'prm segment_category Order'
+		isHidden
+		formatString: 0
+		lineageTag: b93e19a8-c327-4b47-b345-ec7745e0f6a3
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'prm segment_category' = calculated
+		mode: import
+		source =
+				{
+				    ("Segment", NAMEOF('dim_product'[segment]), 0),
+				    ("Category", NAMEOF('dim_product'[category]), 1)
+				}
+
+	annotation PBI_Id = 2604abbe22f24eacb4aeaf7aea133a54
+

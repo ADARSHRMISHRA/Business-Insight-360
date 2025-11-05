@@ -1,0 +1,97 @@
+table 'dim date'
+	lineageTag: 0eb040d0-e28a-41fc-a5ee-70dac42df898
+
+	column date
+		dataType: dateTime
+		formatString: Mmm yy
+		lineageTag: 1e5d6a02-3ccd-431a-9ab0-d0ad3aea96f9
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: 35402930-8808-498c-9a4a-6e23ef33a75d
+			defaultHierarchy: LocalDateTable_05413977-bcc2-4ba7-88dd-57900f932477.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	column month
+		dataType: dateTime
+		formatString: MMm yy
+		lineageTag: 83da56d6-12c2-43a8-b3cd-0d99249c6b0c
+		summarizeBy: none
+		sourceColumn: month
+
+		variation Variation
+			isDefault
+			relationship: 78ce6dfd-5840-4e4d-9cce-e5b683f60f35
+			defaultHierarchy: LocalDateTable_69857bd1-cf3e-4e27-b0da-c3b1ba6f365f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	column 'Fiscal Year'
+		dataType: string
+		lineageTag: 1aea7d58-57d7-4eda-a3ee-4b144f33d53f
+		summarizeBy: none
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column fy_month_num = MONTH(DATE(YEAR('dim date'[date]),MONTH('dim date'[date])+4,1))
+		formatString: 0
+		lineageTag: 657a2428-7da7-45d3-88be-8c72035a0cc0
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter = "Q" & ROUNDUP('dim date'[fy_month_num]/3,0)
+		lineageTag: 2b165c0c-dfd7-45d4-a8db-880e27338d31
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column ytd_ytg =
+			
+			VAR lastsalesdate =max(last_date[last_date])
+			VAR fymonthnum = MONTH(DATE(YEAR(lastsalesdate),MONTH(lastsalesdate)+4,1))
+			
+			RETURN
+			IF
+			('dim date'[fy_month_num]>fymonthnum,"YTG","YTD")
+		lineageTag: 1bc49c1e-5c9d-4d73-8e69-4b85c3ffccf6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'dim date' = m
+		mode: import
+		queryGroup: Dimensions
+		source =
+				let
+				    Source = List.Transform({Number.From(#date(2017,9,1))..Number.From(#date(2022,12,31))}, each Date.From(_)),
+				    #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table",{{"Column1", type date}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1", "date"}}),
+				    #"Inserted Start of Month" = Table.AddColumn(#"Renamed Columns", "Start of Month", each Date.StartOfMonth([date]), type date),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Inserted Start of Month",{{"Start of Month", "month"}}),
+				    #"Added Custom" = Table.AddColumn(#"Renamed Columns1", "Fiscal Year", each Date.Year(Date.AddMonths([month],4))),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"Fiscal Year", type text}}),
+				    #"Sorted Rows" = Table.Sort(#"Changed Type1",{{"Fiscal Year", Order.Ascending}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Sorted Rows", each ([Fiscal Year] <> "2023")),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Filtered Rows",{{"date", type date}}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Changed Type2", each true)
+				in
+				    #"Filtered Rows1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

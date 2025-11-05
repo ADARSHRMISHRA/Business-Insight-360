@@ -1,0 +1,29 @@
+table 'sales slider'
+	lineageTag: 04f1b952-b98a-4e56-8045-a77369cbd9ca
+
+	measure 'sales slider Value' = SELECTEDVALUE('sales slider'[sales slider])
+		formatString: "₹"\ #,0.###############;#,0.###############\ -"₹";"₹"\ #,0.###############
+		lineageTag: 7514ee03-a6b7-4c41-89d2-b7d4e09aa5e6
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	column 'sales slider'
+		lineageTag: 693f38ee-2ec9-4465-93bd-3810e4d5b3b1
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'sales slider' = calculated
+		mode: import
+		source = GENERATESERIES(CURRENCY(0), CURRENCY(20), CURRENCY(1))
+
+	annotation PBI_Id = e5f439835dac43a8b34041a5cc1254d7
+

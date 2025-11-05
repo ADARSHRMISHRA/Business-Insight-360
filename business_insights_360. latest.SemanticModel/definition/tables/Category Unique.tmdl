@@ -1,0 +1,19 @@
+table 'Category Unique'
+	lineageTag: 6d0fc9d7-8c7e-4c42-aa3b-38644441538b
+
+	column category
+		lineageTag: dc8acef3-d75f-4182-bd92-2830d2b18abe
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: dim_product[category]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Category Unique' = calculated
+		mode: import
+		source = ```
+				ALLNOBLANKROW(dim_product[category]) 
+				```
+
+	annotation PBI_Id = a059e6e5453340e2a628ff9dd1643ad1
+

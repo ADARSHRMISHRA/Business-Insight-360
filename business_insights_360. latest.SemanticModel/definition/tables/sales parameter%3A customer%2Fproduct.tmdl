@@ -1,0 +1,48 @@
+table 'sales parameter: customer/product'
+	lineageTag: fca08a27-dadd-4666-b3c7-a6b34801eac7
+
+	column 'sales parameter: customer/product'
+		lineageTag: 7cecfa6e-3b0d-4453-9f74-717481bca408
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'sales parameter: customer/product Order'
+
+		relatedColumnDetails
+			groupByColumn: 'sales parameter: customer/product Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'sales parameter: customer/product Fields'
+		isHidden
+		lineageTag: bd20274d-021e-4126-8319-f7e9e56dbcc7
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'sales parameter: customer/product Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'sales parameter: customer/product Order'
+		isHidden
+		formatString: 0
+		lineageTag: 6ae52ea5-25fd-43c4-be6d-982e6cf4fba7
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'sales parameter: customer/product' = calculated
+		mode: import
+		source =
+				{
+				    ("PRODUCT", NAMEOF('dim_product'[product]), 0),
+				    ("CUSTOMER", NAMEOF('dim_customer'[customer]), 1)
+				}
+
+	annotation PBI_Id = 0b36ef9c394941babc9ba3628c90848f
+

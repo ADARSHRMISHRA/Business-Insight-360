@@ -1,0 +1,43 @@
+table gross_price
+	lineageTag: f6ea5f08-3dc5-4eca-b748-b16e918f9115
+
+	column product_code
+		dataType: string
+		lineageTag: 2331008e-a8ea-4d59-ac07-1402d5c1947e
+		summarizeBy: none
+		sourceColumn: product_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column fiscal_year
+		dataType: string
+		lineageTag: 9e701cf8-579e-46f8-96af-23f56a33ee4f
+		summarizeBy: none
+		sourceColumn: fiscal_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column gross_price
+		dataType: double
+		lineageTag: 7d1d1fe4-3530-4327-9a44-ce101e95f8d6
+		summarizeBy: sum
+		sourceColumn: gross_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition gross_price = m
+		mode: import
+		queryGroup: supported_facts
+		source =
+				let
+				    Source = MySQL.Database("localhost", "gdb056", [ReturnSingleDatabase=true]),
+				    gdb056_gross_price = Source{[Schema="gdb056",Item="gross_price"]}[Data]
+				in
+				    gdb056_gross_price
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

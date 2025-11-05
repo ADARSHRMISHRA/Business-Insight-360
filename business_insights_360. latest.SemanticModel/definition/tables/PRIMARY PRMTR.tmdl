@@ -1,0 +1,48 @@
+table 'PRIMARY PRMTR'
+	lineageTag: ac974ece-07b9-431d-84f7-0ae8508d8278
+
+	column 'PRIMARY PRMTR'
+		lineageTag: 36269d21-aa85-41b1-b9d8-28626dcca4a2
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'PRIMARY PRMTR Order'
+
+		relatedColumnDetails
+			groupByColumn: 'PRIMARY PRMTR Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PRIMARY PRMTR Fields'
+		isHidden
+		lineageTag: b076c047-7929-4474-88b6-a82e91ca29fc
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'PRIMARY PRMTR Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PRIMARY PRMTR Order'
+		isHidden
+		formatString: 0
+		lineageTag: e6a770e6-d419-4fda-bd6e-d96f17b4f363
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'PRIMARY PRMTR' = calculated
+		mode: import
+		source =
+				{
+				    ("MARKET", NAMEOF('dim_market'[market]), 0),
+				    ("PRODUCT", NAMEOF('dim_product'[product]), 1)
+				}
+
+	annotation PBI_Id = f7247ebbc0584985acfacdee633e9f5a
+

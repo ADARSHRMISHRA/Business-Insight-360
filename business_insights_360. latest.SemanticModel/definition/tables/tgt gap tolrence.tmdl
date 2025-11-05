@@ -1,0 +1,28 @@
+table 'tgt gap tolrence'
+	lineageTag: 5f838814-b31d-43cc-8b35-44b8342e7ae7
+
+	measure 'tgt gap tolrence Value' = SELECTEDVALUE('tgt gap tolrence'[tgt gap tolrence])
+		lineageTag: 620c7557-c47b-4385-b28b-2e79c719061b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'tgt gap tolrence'
+		dataType: double
+		formatString: 0%;-0%;0%
+		lineageTag: 4e08e83f-dce7-4f02-a92a-1ddeba21d6db
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'tgt gap tolrence' = calculated
+		mode: import
+		source = GENERATESERIES(0, 0.2, .001)
+
+	annotation PBI_Id = 22315156d10b423d8e39c2d0741630a0
+

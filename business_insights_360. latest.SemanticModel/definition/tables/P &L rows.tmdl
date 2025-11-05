@@ -1,0 +1,51 @@
+table 'P &L rows'
+	lineageTag: af1a9f38-be6d-4752-b6cb-66d90f5fe8b3
+
+	column Description
+		dataType: string
+		lineageTag: 476bb3e9-39d7-49cf-9428-7e09f793120d
+		summarizeBy: none
+		sourceColumn: Description
+		sortByColumn: Order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order
+		dataType: int64
+		formatString: 0
+		lineageTag: 1300ef40-1f05-461e-97bb-1225d6b0cb2b
+		summarizeBy: sum
+		sourceColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Line Item'
+		dataType: string
+		lineageTag: 6e808d3a-1ffd-4812-8b81-8b67812a96f9
+		summarizeBy: none
+		sourceColumn: Line Item
+		sortByColumn: Order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'P &L rows' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("fZFhS8MwEIb/Sij4baLddNPPqw7B2sEUhLIPobt1gZmUJBV/vpdr0jazCD0K7z13ufeuLJNkRt9+ViYZmEqLxgolUSr0ATT+X4UE9mLhi5iNVsawHT+DwVyKMVYcsdWIy28lKmAZHNrK95tjTOdc1RvYPhO6LzD+6vSGMoOcCVOpVlqk7zCuGWWDOlGg7Al0NNv9qC7IXeG7svzM4vdGhUuMf5HgLXhaeU+Dl5zL9sgr22oha7bGNog80EATKVfxrEHUJxvYR2Ij0VEFufRMekvQSBvMrYvNziFp74WU4do517VwbtN5f2+vXULsymGLCwxVAnN2wz6koIHcqQaBBm5Ac7c0nODpswFpwIF0myj30+XCardaHbueS79cr8RAN9oqQtxg+18=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t, Column2 = _t, Column3 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"", type text}, {"_1", type text}, {"_2", type text}}),
+				    #"Promoted Headers1" = Table.PromoteHeaders(#"Changed Type1", [PromoteAllScalars=true]),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Description", type text}, {"Order", Int64.Type}, {"Line Item", type text}})
+				in
+				    #"Changed Type2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

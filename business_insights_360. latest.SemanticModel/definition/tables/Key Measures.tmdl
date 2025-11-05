@@ -1,0 +1,633 @@
+table 'Key Measures'
+	lineageTag: c6afb4cd-8263-46be-b4ec-5b63505f2cbf
+
+	measure 'GS $' = SUM(fact_sales_actual_rem[gross_price_amount])
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 515db82d-f5ab-41d5-b5b0-f23d0ba93c65
+
+	measure 'NIS $' = SUM(fact_sales_actual_rem[net_invoice_sales])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4eba5a39-ac37-4d2f-bef1-600543513129
+
+	measure 'Pre_invoice_deduction $' = SUM(fact_sales_actual_rem[pre_invoice_ded-amount])
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 2f6ddeb8-2867-4f47-bd37-55f52c98f13d
+
+	measure 'Post_invoice_deduction $' = SUM(fact_sales_actual_rem[post_invoice_ded_amount])
+		lineageTag: 416109bd-2e95-4646-a626-c75828c67329
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Post_invoice_other_deduction $' = SUM(fact_sales_actual_rem[other_deduction_amount])
+		lineageTag: 6a6198e2-037d-41fa-973c-3f470a0b38ec
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total_post_invoice_dedcuction $' = 'Key Measures'[Post_invoice_deduction $] + 'Key Measures'[Post_invoice_other_deduction $]
+		lineageTag: a17e0703-ca05-41e1-adec-5e108196b287
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'NS $' = SUM(fact_sales_actual_rem[net_sales_amount])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: eae9ae85-5b0d-4656-a614-9a544735d8d7
+
+	measure 'Manufacturing cost $' = SUM(fact_sales_actual_rem[manufacturing_cost])
+		lineageTag: e671fccf-8777-4653-8b49-c65ddd027eaf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Freight cost $' = SUM(fact_sales_actual_rem[freight_cost])
+		lineageTag: ad81e4e6-19cc-462a-bcb3-b1483feef60a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Other cost $' = SUM(fact_sales_actual_rem[other_cost])
+		lineageTag: 485f3332-4ed6-4248-a4c6-13bb36911cef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total COGS $' = 'Key Measures'[Manufacturing cost $]+[Freight cost $]+[Other cost $]
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: d373cf9d-de1d-4521-ba71-2a56ceef06b4
+
+	measure 'GM $' = [NS $]-[Total COGS $]
+		lineageTag: 1af1916e-5623-408a-a67a-b86b32a9aafd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'GM %' = [GM $]/[NS $]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 05c81677-337c-4c5b-bf07-0e9db578d97c
+
+	measure Quantity = SUM(fact_sales_actual_rem[qty])
+		formatString: 0
+		lineageTag: 2b69d1dd-d69f-4e55-85fd-bcae7e3c1d72
+
+	measure 'GM per Unit' = DIVIDE([GM $],[Quantity],0)
+		lineageTag: 9a1850c5-2178-44c4-a793-4a66eb7465a5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'P&L values' =
+			
+			VAR res =
+			SWITCH(TRUE(),
+			MAX('P &L rows'[Order])=1, [GS $]/1000000,
+			MAX('P &L rows'[Order])=2, [Pre_invoice_deduction $]/1000000,
+			MAX('P &L rows'[Order])=3, [NIS $]/1000000,
+			MAX('P &L rows'[Order])=4, [Post_invoice_deduction $]/1000000,
+			MAX('P &L rows'[Order])=5, [Post_invoice_other_deduction $]/1000000,
+			MAX('P &L rows'[Order])=6, [Total_post_invoice_dedcuction $]/1000000,
+			MAX('P &L rows'[Order])=7, [NS $]/1000000,
+			MAX('P &L rows'[Order])=8, [Manufacturing cost $]/1000000,
+			MAX('P &L rows'[Order])=9, [Freight cost $]/1000000,
+			MAX('P &L rows'[Order])=10, [Other cost $]/1000000,
+			MAX('P &L rows'[Order])=11, [Total COGS $]/1000000,
+			MAX('P &L rows'[Order])=12, [GM $]/1000000,
+			MAX('P &L rows'[Order])=13,[GM %]*100,
+			MAX('P &L rows'[Order])=14, [GM per Unit],
+			MAX('P &L rows'[Order])=15, [Operational Expense $]/1000000,
+			MAX('P &L rows'[Order])=16, [Net Profit $]/1000000,
+			MAX('P &L rows'[Order])=17, [Net Profit %]*100)
+			RETURN
+			IF(HASONEVALUE('P &L rows'[Description]),res,[NS $]/1000000)
+		lineageTag: 7344ef8f-e136-4416-bbc2-f830b404bb76
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'P&L LY' = CALCULATE([P&L values],SAMEPERIODLASTYEAR('dim date'[date]))
+		lineageTag: 368ecf31-60c1-4b46-ba67-8747fbd1e33d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'P&L chg' = ```
+			
+			 var res = [P&L values]-[P&L Benchmark]
+			 RETURN
+			 IF(ISBLANK([P&L Benchmark])||ISBLANK([P&L values]),BLANK(),res)
+			```
+		lineageTag: 5f1b25c4-ae3b-4b51-816a-19764e57f2e2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'P&L chg %' =
+			
+			var res = DIVIDE([P&L chg],[P&L Benchmark],0)*100
+			RETURN
+			IF(ISBLANK([P&L Benchmark]) || ISBLANK([P&L values]),BLANK(),RES)
+		formatString: 0.00
+		lineageTag: 8172453a-bd93-4237-97bb-cf095dea9874
+
+	measure 'P&L final values' =
+			SWITCH(TRUE(),
+			 SELECTEDVALUE(fiscal_year[Fy_desc])=MAX('P&L Columns'[Column Header]),[P&L values],
+			 MAX('P&L Columns'[Column Header])= "BM",[P&L Benchmark],
+			 MAX('P&L Columns'[Column Header])= "CHG", [P&L chg],
+			 MAX('P&L Columns'[Column Header])= "CHG%", [P&L chg %]
+			)
+		lineageTag: 0fad3a33-f40b-4979-acae-9d42cdc1698b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SELCTED P&L ROWS' = IF(HASONEVALUE('P &L rows'[Description]),SELECTEDVALUE('P &L rows'[Description]),"Net Sales")
+		lineageTag: c6f27a79-c2c4-4aa5-80cd-ca907cf346c6
+
+	measure 'performance visual title' = 'Key Measures'[SELCTED P&L ROWS] & " Perfromance Overtime"
+		lineageTag: 5e41e7dc-b7c5-4631-b15d-cbd9ce7df1c0
+
+	measure 'Ads & Promotion' = SUM(fact_sales_actual_rem[Ads_promotion_amt])
+		lineageTag: 0babea4b-f5de-4afd-905c-bb6ae078f446
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Other Operational Amt' = SUM(fact_sales_actual_rem[other_operation_amt])
+		lineageTag: e3974ffb-2966-4e35-b002-3d0e43540a6e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Operational Expense $' = ([Ads & Promotion]+[Other Operational Amt])*(-1)
+		lineageTag: 7de063cb-7795-4866-b2c0-bfe3c41aedd0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Profit $' = [GM $]+[Operational Expense $]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 77c54050-b3cf-4b0d-9316-60fc711476f2
+
+	measure 'Net Profit %' = DIVIDE([Net Profit $],[NS $],0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6db85891-9bdd-4dbf-a650-6a4955282645
+
+	measure 'Sales Qty' = CALCULATE([Quantity],fact_sales_actual_rem[date]<=MAX(last_date[last_date]))
+		formatString: 0
+		lineageTag: 4d886bfd-996f-45ff-aed1-f03430f50a4e
+
+	measure 'Forecast Quantity' =
+			
+			VAR lsdt = MAX(last_date[last_date])
+			RETURN
+			CALCULATE(SUM(fact_forecast_monthly[forecast_quantity]),fact_forecast_monthly[date]<=lsdt)
+		formatString: 0
+		lineageTag: 70ad7d4d-5f19-413c-941f-14c705fa01bf
+
+	measure 'Net Error ($)' = [Forecast Quantity]-[Sales Qty]
+		formatString: 0.0
+		lineageTag: 2f4adc23-2826-4497-b048-6e0887958af6
+
+	measure 'Net Error %' = DIVIDE([Net Error ($)],[Forecast Quantity],0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ab79efe4-57f7-4e87-89da-83d7255e11eb
+
+	measure 'ABS Error ($)' = ```
+			
+			SUMX(DISTINCT('dim date'[date]),
+			SUMX(DISTINCT(dim_product[product_code]),ABS([Net Error ($)]))
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 08f05fac-52ff-448d-9a2b-cd1cc075bfeb
+
+	measure 'ABS Error %' = DIVIDE([ABS Error ($)],[Forecast Quantity],0)
+		formatString: #,0.00%;-#,0.00%;#,0.00%
+		lineageTag: 33c7e0a1-0ddf-46a2-9440-1777cfe7c31b
+
+	measure 'Forecast Accuracy %' = IF([ABS Error %] <> BLANK(),1-[ABS Error %],BLANK())
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 19967fcb-48e8-402f-a790-d8e1eed13af5
+
+	measure 'Forecast Accuracy % LY' =
+			CALCULATE([Forecast Accuracy %],
+			SAMEPERIODLASTYEAR('dim date'[date])
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: d0e60bbc-68f7-469f-b2be-b8d0dd437a1a
+
+	measure Risk = IF([Net Error ($)]>0 , "EI", IF([Net Error ($)]<0, "OOS",BLANK()))
+		lineageTag: 1cb36f21-8d13-4133-84f4-1580230c45c8
+
+	measure 'top/bottom title' = "Top/Bottom Products & Customers by " & 'Key Measures'[SELCTED P&L ROWS]
+		lineageTag: e622e497-2c4e-4ef9-ad62-f6c751f88472
+
+	measure 'NS $ LY' = CALCULATE([NS $],SAMEPERIODLASTYEAR('dim date'[date]))
+		lineageTag: 67abe709-ed26-4a7d-a307-061b03044f3c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'GM % LY' = CALCULATE([GM %],SAMEPERIODLASTYEAR('dim date'[date]))
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 1bd89234-61e9-42e9-a6d7-1d98377155c0
+
+	measure 'Net Profit % LY' = CALCULATE([Net Profit %],SAMEPERIODLASTYEAR('dim date'[date]))
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 22623ea5-094b-4099-a9e3-8a30a2f62707
+
+	measure 'Net Error LY' = CALCULATE([Net Error ($)],SAMEPERIODLASTYEAR('dim date'[date]))
+		formatString: 0
+		lineageTag: a25e2a80-bab0-479a-9c74-d481498b8a03
+
+	measure 'ABS Error LY' = CALCULATE([ABS Error ($)],SAMEPERIODLASTYEAR('dim date'[date]))
+		formatString: 0
+		lineageTag: a57f323e-3b0a-4cd1-8d5f-4e962b5a691f
+
+	measure 'Market Share %' = DIVIDE(SUM(marketshare[Sales]),SUM(marketshare[total_market_sales_$]),0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b4a7edc5-5d49-47b3-b968-72bc03cf746b
+
+	measure 'Last sales footer' =
+			
+			"Sales date loaded until : " & FORMAT(MAX(last_date[last_date]),"MMM YY")
+		lineageTag: 48bf633b-5c35-46bc-9de7-1fb8d2cc945c
+
+	measure 'NS Target' =
+			
+			VAR tgt = SUM(NsGmTarget[ns_target])
+			RETURN
+			IF([Customer/Product filter],BLANK(),tgt)
+		lineageTag: 893ccac3-1113-477a-8172-77a14eb80637
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'NP Target' = SUM(NsGmTarget[np_target])
+		lineageTag: 86e3efdb-dedc-4f57-ab83-662785311b44
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'GM Target' = SUM(NsGmTarget[gm_target])
+		lineageTag: 102df705-9438-4d16-a46e-c7026993bd10
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'GM % Target' = DIVIDE([GM Target],SUM(NsGmTarget[ns_target]),0)
+		lineageTag: a9828abf-7894-4c0b-b86e-53431b39b5ef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'NP % Target' = DIVIDE([NP Target],SUM(NsGmTarget[ns_target]),0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 571abcc5-12d7-4e8f-bc96-07ad1bf96968
+
+	measure 'NS Benchmark' =
+			
+			SWITCH(TRUE(),
+			SELECTEDVALUE('Set Benchmark'[id])=1, [NS $ LY],
+			SELECTEDVALUE('Set Benchmark'[id])=2, [NS Target]
+			)
+		lineageTag: 13c1b210-8926-43c7-bf5a-9496334cdd1e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customer/Product filter' = ISCROSSFILTERED(dim_product[product]) || ISFILTERED(dim_customer[customer])
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 61fe3bac-dcaa-4763-98eb-f7a489746c05
+
+	measure 'GM % Benchmark' =
+			
+			SWITCH(TRUE(),
+			SELECTEDVALUE('Set Benchmark'[id])=1, [GM % LY],
+			SELECTEDVALUE('Set Benchmark'[id])=2, [GM % Target]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 1b2b0f7f-61a5-463e-8a7f-99b922fb0cd0
+
+	measure 'Np % Benchmark' =
+			
+			SWITCH(TRUE(),
+			SELECTEDVALUE('Set Benchmark'[id])=1, [Net Profit % LY],
+			SELECTEDVALUE('Set Benchmark'[id])=2, [NP % Target]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6f3bbf4a-61ba-4649-9749-d0b9a6286fb6
+
+	measure 'bm msg' = IF([NS Benchmark]=BLANK() ||[GM % Benchmark]=BLANK() || [Np % Benchmark]= BLANK(), "Benchmark Target is not available for selected filter(s)","")
+		lineageTag: 0b99d440-e8f4-48c9-920f-5678c4433dd4
+
+	measure 'P&L Targets' =
+			
+			VAR res =
+			SWITCH(TRUE(),
+			
+			MAX('P &L rows'[Order])=7, [NS Target]/1000000,
+			MAX('P &L rows'[Order])=12, [GM Target]/1000000,
+			MAX('P &L rows'[Order])=13,[GM % Target]*100,
+			MAX('P &L rows'[Order])=16, [NP Target]/1000000,
+			MAX('P &L rows'[Order])=17, [NP % Target]*100)
+			RETURN
+			IF(HASONEVALUE('P &L rows'[Description]),res,[NS Target]/1000000)
+		lineageTag: 21ed54a9-2bf7-479b-b282-e86a8fb7d737
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'P&L Benchmark' =
+			
+			SWITCH(TRUE(),
+			SELECTEDVALUE('Set Benchmark'[id])=1, [P&L LY],
+			SELECTEDVALUE('Set Benchmark'[id])=2, [P&L Targets]
+			)
+		lineageTag: 08bf1480-523c-47e7-b18a-9870086e265d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'GM % Variance' = [GM % Benchmark]-[GM %]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 915ac80e-d2b3-4494-ac61-2f5c6992f906
+
+	measure 'GM % Filter' = IF([GM % Variance]>=SELECTEDVALUE('tgt gap tolrence'[tgt gap tolrence]),1,0)
+		lineageTag: eebfac27-8eb9-49de-aadf-6f2fd6b8e0bd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Sales Trend Title' = "NS & GM % For " & SELECTEDVALUE(dim_customer[customer])
+		lineageTag: 08df46e5-f96b-4337-aa0a-080692373d31
+
+	measure 'RC %' =
+			
+			DIVIDE([NS $],CALCULATE([NS $],ALL(dim_customer),ALL(dim_product),ALL(dim_market)))
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6e53b2e8-bb92-4ed2-817b-60ba72dcf4d8
+
+	measure 'Atliq MS %' = CALCULATE([Market Share %],marketshare[Manufacturers]= "atliq")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 3d6872e9-1009-41d4-9101-0ece617e5b88
+
+	measure 'gm% change yoy' = [GM %]-[GM % LY]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 28bc5893-9e16-489a-aed2-255110251f8e
+
+	measure 'post dsct oct' = SUM(post_invoice_deductions[discounts_pct])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: daa8c32c-e6f2-40df-a0d1-315310b53fb7
+
+	measure 'total post deduction amount' = SUM(fact_sales_actual_rem[post_invoice_ded_amount])
+		lineageTag: decd1577-e138-4496-a90a-ee657c1ef6d7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'POST DISCUNT % WEIGHTED AVG' = DIVIDE([total post deduction amount],[NIS $],0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 81cfd335-7267-448e-84e3-91bc3024d562
+
+	measure 'Δ GM % arrow' =
+			
+			var perc = if( [GM % Benchmark] = BLANK(), BLANK(),DIVIDE([GM %], [GM % Benchmark],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, UNICHAR(11165) &" "& FORMAT(perc,"0.00%"),
+			    perc<0, UNICHAR(11167) &" "& FORMAT(perc*-1,"0.00%"),
+			    FORMAT(perc,"0.00%")
+			    )
+			    return
+			    _format
+		lineageTag: 4ec4055b-2e69-415d-a2d3-8b97ed2df1db
+
+	measure 'Δ NP % arrow' = ```
+			
+			 var perc = if( [Np % Benchmark] = BLANK(), BLANK(),DIVIDE([Net Profit %], [Np % Benchmark],0)-1)
+			 var _format = 
+			 SWITCH(TRUE(),
+			 perc>0, UNICHAR(11165) &" "& FORMAT(perc, "0.00%"),
+			 perc<0,  UNICHAR(11167)&" "& FORMAT(perc*-1, "0.00%"),
+			 FORMAT(perc,"0.00%")
+			 )
+			 RETURN
+			 _format
+			```
+		lineageTag: ef24f9fd-5b3c-4f07-8d79-3a2085fcfe4e
+
+	measure 'CF Δ NS $ %' = ```
+			
+			 var perc = if( [NS Benchmark] = BLANK(), BLANK(),DIVIDE([NS $], [NS Benchmark],0)-1)
+			 var _format = 
+			 SWITCH(TRUE(),
+			 perc>0, "Green",
+			 perc<0, "Red",
+			 "Grey"
+			 )
+			 RETURN
+			 _format
+			```
+		lineageTag: 668c29bb-b825-4d73-8207-fdcbd5fa7211
+
+	measure 'Δ NS $ % arrow' =
+			
+			var perc = if( [NS Benchmark] = BLANK(), BLANK(),DIVIDE([NS $], [NS Benchmark],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, UNICHAR(11165) &" "& FORMAT(perc,"0.00%"),
+			    perc<0, UNICHAR(11167) &" "& FORMAT(perc*-1,"0.00%"),
+			    FORMAT(perc,"0.00%")
+			    )
+			    return
+			    _format
+		lineageTag: 828ed373-c5d4-40d1-8967-5939825f1920
+
+	measure 'CF Δ GM % arrow' =
+			
+			var perc = if( [GM % Benchmark] = BLANK(), BLANK(),DIVIDE([GM %], [GM % Benchmark],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, "Green",
+			    perc<0, "Red",
+			    "grey"
+			    )
+			    return
+			    _format
+		lineageTag: 6be26078-94f6-4a52-82fd-fff2b0c2cdda
+
+	measure 'CF Δ NP % arrow' = ```
+			
+			 var perc = if( [Np % Benchmark] = BLANK(), BLANK(),DIVIDE([Net Profit %], [Np % Benchmark],0)-1)
+			 var _format = 
+			 SWITCH(TRUE(),
+			 perc>0, "Green",
+			 perc<0,  "Red",
+			  "Grey"
+			 )
+			 RETURN
+			 _format
+			```
+		lineageTag: b75632da-bdff-4262-bc15-b76a27b038b5
+
+	measure 'BARS for P&L values' =
+			
+			VAR res =
+			SWITCH(TRUE(),
+			MAX('P &L rows'[Order])=1, [GS $]/1000000,
+			MAX('P &L rows'[Order])=2, [Pre_invoice_deduction $]/1000000,
+			MAX('P &L rows'[Order])=3, [NIS $]/1000000,
+			MAX('P &L rows'[Order])=4, [Post_invoice_deduction $]/1000000,
+			MAX('P &L rows'[Order])=5, [Post_invoice_other_deduction $]/1000000,
+			MAX('P &L rows'[Order])=6, [Total_post_invoice_dedcuction $]/1000000,
+			MAX('P &L rows'[Order])=7, [NS $]/1000000,
+			MAX('P &L rows'[Order])=8, [Manufacturing cost $]/1000000,
+			MAX('P &L rows'[Order])=9, [Freight cost $]/1000000,
+			MAX('P &L rows'[Order])=10, [Other cost $]/1000000,
+			MAX('P &L rows'[Order])=11, [Total COGS $]/1000000,
+			MAX('P &L rows'[Order])=12, [GM $]/1000000,
+			MAX('P &L rows'[Order])=13,[GM %]*100,
+			MAX('P &L rows'[Order])=14, [GM per Unit],
+			MAX('P &L rows'[Order])=15, [Operational Expense $]/1000000,
+			MAX('P &L rows'[Order])=16, [Net Profit $]/1000000,
+			MAX('P &L rows'[Order])=17, [Net Profit %]*100)
+			RETURN
+			IF(HASONEVALUE('P &L rows'[Description]),res,[NS $]/1000000)
+		lineageTag: dfa759ea-b893-469a-a8a6-0ddeebbb8b4c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Δ GM %' = ```
+			if( [GM % Benchmark] = BLANK(), BLANK(),DIVIDE([GM %], [GM % Benchmark],0)-1)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0944a41f-0359-41fb-9d05-511ae497eeb1
+
+	measure 'BAR GM $' = [NS $]-[Total COGS $]
+		lineageTag: bb71e471-cdf3-4aa4-a008-a38b6fcb8e32
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Title_SALES_List Product vs Customer' = ```
+			
+			SWITCH(
+			    
+			    SELECTEDVALUE(
+			    'sales parameter: customer/product'[sales parameter: customer/product Order]
+			    ),
+			    0, "PRODUCT PERFORMANCE",
+			    1, "CUSTOMER PERFORMANCE",
+			    "UNKNOWN"
+			)
+			
+			// if(  SUMMARIZECOLUMNS( 'Param 003: Sales page Product - Customer'[Param 003: Sales page Product - Store], 'Param 003: Sales page Product - Customer') = "Product", 
+			//                          "Product Performance",
+			//                           "Customer Performance"
+			//                     ) 
+			
+			```
+		lineageTag: 7ce40cce-0d85-470a-92a7-4ef6d2c6fff1
+
+	measure 'BAR Net Profit %' = DIVIDE([Net Profit $],[NS $],0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ad9a0f71-6abd-4f01-b1c5-7f9ecffe0227
+
+	measure 'TITLE MARKET_PEFRORMANCE_GMvsNP' =
+			
+			SWITCH(
+			    SELECTEDVALUE('prm marktng gm% np%'[prm marktng gm% np% Order]),
+			    0, "Market Performance by - Gross Margin %",
+			    1, "Market Performance by - Net Profit %",
+			    "unknown"
+			)
+		lineageTag: 6344f58a-dbc9-486c-8c3c-dac9199c4b52
+
+	measure 'TITLE SEGMENT_PEFRORMANCE_GMvsNP' =
+			
+			SWITCH(
+			    SELECTEDVALUE('prm marktng gm% np%'[prm marktng gm% np% Order]),
+			    0, "Segment Performance by - Gross Margin %",
+			    1, "Segment Performance by - Net Profit %",
+			    "unknown"
+			)
+		lineageTag: d86d81f5-1cbb-4f70-947a-7aea345001a1
+
+	measure 'Δ FCA $ % arrow' =
+			
+			var perc = if([Forecast Accuracy % LY] = BLANK(), BLANK(),DIVIDE([Forecast Accuracy %], [Forecast Accuracy % LY],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, UNICHAR(11165) &" "& FORMAT(perc,"0.00%"),
+			    perc<0, UNICHAR(11167) &" "& FORMAT(perc*-1,"0.00%"),
+			    FORMAT(perc,"0.00%")
+			    )
+			    return
+			    _format
+		lineageTag: 5932075d-8bfa-4cbc-9f3e-6f36b1e09103
+
+	measure 'Δ NE $  arrow' =
+			
+			var perc = if([Net Error LY]  = BLANK(), BLANK(),DIVIDE([Net Error ($)], [Net Error LY],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, UNICHAR(11165) &" "& FORMAT(perc,"0.00%"),
+			    perc<0, UNICHAR(11167) &" "& FORMAT(perc*-1,"0.00%"),
+			    FORMAT(perc,"0.00%")
+			    )
+			    return
+			    _format
+		lineageTag: c8fb1f23-1bc8-4a41-8988-e8e6983be741
+
+	measure 'Δ  ABS $  arrow' =
+			
+			var perc = if([ABS Error LY]  = BLANK(), BLANK(),DIVIDE([ABS Error ($)], [ABS Error LY],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, UNICHAR(11165) &" "& FORMAT(perc,"0.00%"),
+			    perc<0, UNICHAR(11167) &" "& FORMAT(perc*-1,"0.00%"),
+			    FORMAT(perc,"0.00%")
+			    )
+			    return
+			    _format
+		lineageTag: 3725fc0c-8753-42ff-9d3f-5b837af87eec
+
+	measure 'CF  FCA $ % arrow' =
+			
+			var perc = if([Forecast Accuracy % LY] = BLANK(), BLANK(),DIVIDE([Forecast Accuracy %], [Forecast Accuracy % LY],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, "Green",
+			    perc<0, "Red",
+			    "Grey"
+			    )
+			    return
+			    _format
+		lineageTag: d7ff6afa-ceb9-4599-9bd4-3fdd642dcc93
+
+	measure 'CF  NE $  arrow' =
+			
+			var perc = if([Net Error LY]  = BLANK(), BLANK(),DIVIDE([Net Error ($)], [Net Error LY],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, "Red",
+			    perc<0, "Green",
+			    "Grey"
+			    )
+			    return
+			    _format
+		lineageTag: 7ad6aa90-0e9f-4456-9944-bf2b8b6dda57
+
+	measure 'CF  ABS $  arrow' =
+			
+			var perc = if([ABS Error LY]  = BLANK(), BLANK(),DIVIDE([ABS Error ($)], [ABS Error LY],0)-1)
+			var _format =
+			    SWITCH(TRUE(),
+			    perc>0, "Red",
+			    perc<0, "Green",
+			    "Grey"
+			    )
+			    return
+			    _format
+		lineageTag: a8041c67-1a89-4f7e-be3d-f7217ee9633a
+
+	measure 'Lower Bound' = 0
+		formatString: 0
+		lineageTag: bfca39c1-9f91-4e90-a6a8-0ddd122d3dc8
+
+	measure 'DELTA NP %' = if( [Np % Benchmark] = BLANK(), BLANK(),DIVIDE([Net Profit %], [Np % Benchmark],0)-1)
+		lineageTag: e2b82dd4-7343-44d1-8af6-1e807fd625d9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Key Measures' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
