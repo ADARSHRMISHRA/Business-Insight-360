@@ -1,0 +1,65 @@
+table NsGmTarget
+	lineageTag: 7454985b-9ef0-451b-869e-5a3bfbe0d4e1
+
+	column market
+		dataType: string
+		lineageTag: 1d5be328-1ac5-4961-bc4b-a322c3f5c0b7
+		summarizeBy: none
+		sourceColumn: market
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 70d80547-1827-44c8-b4bc-3879587f896f
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ns_target
+		dataType: double
+		lineageTag: aeb1bc11-73bd-4662-89e8-e82c299adddc
+		summarizeBy: sum
+		sourceColumn: ns_target
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gm_target
+		dataType: double
+		lineageTag: 87c475aa-6617-4706-a5b3-e8e8d4b3935b
+		summarizeBy: sum
+		sourceColumn: gm_target
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column np_target
+		dataType: double
+		lineageTag: 10beda22-1ab3-451d-b912-cf1fcb8a8f53
+		summarizeBy: sum
+		sourceColumn: np_target
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition NsGmTarget = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\adars\Downloads\targets.xlsx"), null, true),
+				    NsGmTarget_Sheet = Source{[Item="NsGmTarget",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(NsGmTarget_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"market", type text}, {"month", type date}, {"ns_target", type number}, {"gm_target", type number}, {"np_target", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

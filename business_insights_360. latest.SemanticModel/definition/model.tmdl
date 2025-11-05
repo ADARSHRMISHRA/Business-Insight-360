@@ -1,0 +1,71 @@
+model Model
+	culture: en-IN
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Dimensions
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup supported_facts
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup facts_group
+
+	annotation PBI_QueryGroupOrder = 1
+
+annotation PBI_QueryOrder = ["dim_customer","dim_market","dim date","dim_product","fact_forecast_monthly","fact_sales_monthly","freight_cost","gross_price","pre_invoice_deductions","manufacturing_cost","post_invoice_deductions","last_date","remaining_dates","fact_sales_actual_rem","Key Measures","P &L rows","operational_cost","marketshare","Report Refresh Date","NsGmTarget","Set Benchmark"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_customer
+ref table dim_market
+ref table dim_product
+ref table fact_forecast_monthly
+ref table DateTableTemplate_9419c78e-0912-4a7a-81b9-b50756d645fc
+ref table freight_cost
+ref table manufacturing_cost
+ref table post_invoice_deductions
+ref table 'dim date'
+ref table LocalDateTable_05413977-bcc2-4ba7-88dd-57900f932477
+ref table LocalDateTable_69857bd1-cf3e-4e27-b0da-c3b1ba6f365f
+ref table last_date
+ref table LocalDateTable_1607f13f-7921-4e21-938b-ce6952c54626
+ref table fact_sales_actual_rem
+ref table fiscal_year
+ref table 'Key Measures'
+ref table 'P &L rows'
+ref table 'P&L Columns'
+ref table operational_cost
+ref table marketshare
+ref table Subzone
+ref table 'Category Unique'
+ref table 'Report Refresh Date'
+ref table LocalDateTable_f0fc15c7-ed9b-4bf4-991a-7668dc60fec6
+ref table NsGmTarget
+ref table 'Set Benchmark'
+ref table 'PRIMARY PRMTR'
+ref table 'finance parameter'
+ref table 'sales parameter: customer/product'
+ref table 'sales slider'
+ref table 'tgt gap tolrence'
+ref table 'prm marktng gm% np%'
+ref table 'prm list marketing'
+ref table 'prm segment_category'
+ref table 'Prm executive division vs chanel'
+ref table gross_price
+ref table pre_invoice_deductions
+ref table remaining_dates
+ref table LocalDateTable_87e7e20e-e360-495d-a95a-380c4d806c39
+ref table fact_sales_monthly
+ref table LocalDateTable_2a40d510-0252-4f9b-a1c5-1003736c5092
+
+ref cultureInfo en-IN
+

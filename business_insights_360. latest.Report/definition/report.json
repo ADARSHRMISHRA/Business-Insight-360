@@ -1,0 +1,211 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.0.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY24SU10",
+      "reportVersionAtImport": {
+        "visual": "1.8.95",
+        "report": "2.0.95",
+        "page": "1.3.95"
+      },
+      "type": "SharedResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "publicCustomVisuals": [
+    "ChicletSlicer1448559807354"
+  ],
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY24SU10",
+          "path": "BaseThemes/CY24SU10.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "atliq-a-logo-0421589778047375052.png",
+          "path": "atliq-a-logo-0421589778047375052.png",
+          "type": "Image"
+        },
+        {
+          "name": "home_icon11414665607431185.png",
+          "path": "home_icon11414665607431185.png",
+          "type": "Image"
+        },
+        {
+          "name": "gradient_blue_black1356472217896424.svg",
+          "path": "gradient_blue_black1356472217896424.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_Minimalist_business5673730439315943.jpg",
+          "path": "Phoenix_10_Minimalist_business5673730439315943.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Untitled_design_(7)15569378970747083.png",
+          "path": "Untitled_design_(7)15569378970747083.png",
+          "type": "Image"
+        },
+        {
+          "name": "refresh-cw-alt-1-svgrepo-com8472410843144851.png",
+          "path": "refresh-cw-alt-1-svgrepo-com8472410843144851.png",
+          "type": "Image"
+        },
+        {
+          "name": "data-raster-svgrepo-com10399099744908336.png",
+          "path": "data-raster-svgrepo-com10399099744908336.png",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern29186073762336895.jpg",
+          "path": "Phoenix_10_A_minimalist_modern29186073762336895.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern9597548190521561.jpg",
+          "path": "Phoenix_10_A_minimalist_modern9597548190521561.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern17146420447381872.jpg",
+          "path": "Phoenix_10_A_minimalist_modern17146420447381872.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern48534670500783583.jpg",
+          "path": "Phoenix_10_A_minimalist_modern48534670500783583.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_Minimalist_icon_for1320130008742968.jpg",
+          "path": "Phoenix_10_Minimalist_icon_for1320130008742968.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern23675698128802614.jpg",
+          "path": "Phoenix_10_A_minimalist_modern23675698128802614.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern965103111053445.jpg",
+          "path": "Phoenix_10_A_minimalist_modern965103111053445.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "gradient_blue_black12913937857421798.svg",
+          "path": "gradient_blue_black12913937857421798.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern15299460612457516.jpg",
+          "path": "Phoenix_10_A_minimalist_modern15299460612457516.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern563291791502043.jpg",
+          "path": "Phoenix_10_A_minimalist_modern563291791502043.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern7408758987993244.jpg",
+          "path": "Phoenix_10_A_minimalist_modern7408758987993244.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_Minimalist_icon_for6575087695303479.jpg",
+          "path": "Phoenix_10_Minimalist_icon_for6575087695303479.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern8025079626012894.jpg",
+          "path": "Phoenix_10_A_minimalist_modern8025079626012894.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Phoenix_10_A_minimalist_modern04529351097722534.jpg",
+          "path": "Phoenix_10_A_minimalist_modern04529351097722534.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "WhatsApp_Image_2025-10-14_at_120095315700477645.jpg",
+          "path": "WhatsApp_Image_2025-10-14_at_120095315700477645.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "WhatsApp_Image_2025-10-14_at_16676502703981424.jpg",
+          "path": "WhatsApp_Image_2025-10-14_at_16676502703981424.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "WhatsApp_Image_2025-10-14_at_133997603698043966.jpg",
+          "path": "WhatsApp_Image_2025-10-14_at_133997603698043966.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "Gemini_Generated_Image_d8hdrtd8745792293241976.png",
+          "path": "Gemini_Generated_Image_d8hdrtd8745792293241976.png",
+          "type": "Image"
+        },
+        {
+          "name": "Gemini_Generated_Image_88etr1815718906379527586.png",
+          "path": "Gemini_Generated_Image_88etr1815718906379527586.png",
+          "type": "Image"
+        },
+        {
+          "name": "WhatsApp_Image_2025-10-29_at_18196839894246003.jpg",
+          "path": "WhatsApp_Image_2025-10-29_at_18196839894246003.jpg",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultFilterActionIsDataFilter": true,
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "filterPaneHiddenInEditMode": true,
+    "useDefaultAggregateDisplayName": true,
+    "customMemoryLimit": "1048576",
+    "customTimeoutLimit": "225"
+  }
+}

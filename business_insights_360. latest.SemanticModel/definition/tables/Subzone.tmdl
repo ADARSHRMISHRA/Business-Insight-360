@@ -1,0 +1,17 @@
+table Subzone
+	lineageTag: ebecdad9-f234-445c-a0b2-00df0f17b96d
+
+	column sub_zone
+		lineageTag: e2927f14-71ee-443a-b3f6-0402847ff41d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: dim_market[sub_zone]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Subzone = calculated
+		mode: import
+		source = ALLNOBLANKROW(dim_market[sub_zone])
+
+	annotation PBI_Id = 6d0f1b8ed545405bb1126143d012374d
+

@@ -1,0 +1,48 @@
+table 'prm marktng gm% np%'
+	lineageTag: 43936c80-dc1f-4656-ab6f-20b276a5a239
+
+	column 'prm marktng gm% np%'
+		lineageTag: a035a595-8a0b-4775-aeef-23003a7f235b
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'prm marktng gm% np% Order'
+
+		relatedColumnDetails
+			groupByColumn: 'prm marktng gm% np% Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'prm marktng gm% np% Fields'
+		isHidden
+		lineageTag: 5e15f634-35ad-499e-827c-3f320e021131
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'prm marktng gm% np% Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'prm marktng gm% np% Order'
+		isHidden
+		formatString: 0
+		lineageTag: 7218d477-b9d2-4f40-861b-eb7287300755
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'prm marktng gm% np%' = calculated
+		mode: import
+		source =
+				{
+				    ("GM %", NAMEOF('Key Measures'[GM %]), 0),
+				    ("Net Profit %", NAMEOF('Key Measures'[Net Profit %]), 1)
+				}
+
+	annotation PBI_Id = 76120995b97245459521409403c06229
+

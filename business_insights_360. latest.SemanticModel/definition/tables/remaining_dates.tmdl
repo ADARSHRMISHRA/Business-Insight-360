@@ -1,0 +1,59 @@
+table remaining_dates
+	lineageTag: f4de27f2-d952-42e4-aff4-ffdd61e8e160
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b14f54f8-e4a1-46ce-a816-1d93574f2c63
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: dd1b2eba-dbe0-4741-aa8b-81d23437c440
+			defaultHierarchy: LocalDateTable_87e7e20e-e360-495d-a95a-380c4d806c39.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column product_code
+		dataType: string
+		lineageTag: 6ce29244-635e-43bf-8b79-8ae4a07e8b6d
+		summarizeBy: none
+		sourceColumn: product_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_code
+		dataType: string
+		lineageTag: f94fcb71-4496-4ba4-b0d5-11d8f624254a
+		summarizeBy: none
+		sourceColumn: customer_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column qty
+		dataType: int64
+		formatString: 0
+		lineageTag: 4e42fa28-b675-4bce-abdc-511a953a3c8a
+		summarizeBy: sum
+		sourceColumn: qty
+
+		annotation SummarizationSetBy = Automatic
+
+	partition remaining_dates = m
+		mode: import
+		queryGroup: facts_group
+		source =
+				let
+				    Source = fact_forecast_monthly,
+				    #"Filtered Rows" = Table.SelectRows(Source, each [date] > (last_date)),
+				    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows",{{"forecast_quantity", "qty"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,48 @@
+table 'Prm executive division vs chanel'
+	lineageTag: 8c13a9cd-03db-4d62-bf8c-23f228078a0f
+
+	column 'Prm executive division vs chanel'
+		lineageTag: 50bd9acc-dfd0-4acc-9864-90ad32d80201
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Prm executive division vs chanel Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Prm executive division vs chanel Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Prm executive division vs chanel Fields'
+		isHidden
+		lineageTag: f7c5a0bd-2b16-40a9-acfa-a6c72f71c3c9
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Prm executive division vs chanel Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Prm executive division vs chanel Order'
+		isHidden
+		formatString: 0
+		lineageTag: e2209905-5870-4628-bdc1-2bf97ded5457
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Prm executive division vs chanel' = calculated
+		mode: import
+		source =
+				{
+				    ("DIVISION", NAMEOF('dim_product'[division]), 0),
+				    ("CHANNEL", NAMEOF('dim_customer'[channel]), 1)
+				}
+
+	annotation PBI_Id = e67a851f98a8414caea841d727bcef3e
+

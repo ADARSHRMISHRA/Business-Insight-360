@@ -1,0 +1,61 @@
+table fact_sales_monthly
+	lineageTag: 8de33f20-92c5-45ed-ac07-5009d0eca5dc
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c26364ca-d7e9-45a4-9f98-f86f3642602b
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: 67bea314-3de5-4704-8464-8a91051e27f1
+			defaultHierarchy: LocalDateTable_2a40d510-0252-4f9b-a1c5-1003736c5092.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column product_code
+		dataType: string
+		lineageTag: ed5c93a2-2c00-4929-b7a2-58e185e494a9
+		summarizeBy: none
+		sourceColumn: product_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_code
+		dataType: string
+		lineageTag: 5bdc5d47-4ac3-44ba-aa7a-4792baeb0431
+		summarizeBy: none
+		sourceColumn: customer_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column qty
+		dataType: int64
+		formatString: 0
+		lineageTag: a6bf98a1-cd82-4535-8bfc-2936f7cc0a5f
+		summarizeBy: sum
+		sourceColumn: qty
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_sales_monthly = m
+		mode: import
+		queryGroup: facts_group
+		source =
+				let
+				    Source = MySQL.Database("localhost", "gdb041", [ReturnSingleDatabase=true]),
+				    gdb041_fact_sales_monthly = Source{[Schema="gdb041",Item="fact_sales_monthly"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(gdb041_fact_sales_monthly,{{"sold_quantity", "qty"}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Renamed Columns",{"date", "product_code", "customer_code", "qty"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"date", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

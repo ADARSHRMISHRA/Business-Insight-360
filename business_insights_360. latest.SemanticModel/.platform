@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "business_insights_360. latest"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "2418fee2-5680-440e-bf8c-7a591b5746f1"
+  }
+}

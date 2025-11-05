@@ -1,0 +1,68 @@
+table dim_customer
+	lineageTag: 4ba91621-63aa-4e80-8464-59faf216826d
+
+	column customer
+		dataType: string
+		lineageTag: fe1e5142-3785-496b-8219-a902d6cce71f
+		summarizeBy: none
+		sourceColumn: customer
+
+		annotation SummarizationSetBy = Automatic
+
+	column market
+		dataType: string
+		lineageTag: c7cfb684-83a8-4034-af87-3b6aeda99477
+		summarizeBy: none
+		sourceColumn: market
+
+		annotation SummarizationSetBy = Automatic
+
+	column platform
+		dataType: string
+		lineageTag: 30788bc2-c210-4c6c-9af4-2c007ef54f24
+		summarizeBy: none
+		sourceColumn: platform
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel
+		dataType: string
+		lineageTag: 566087fc-0634-4246-87d7-ba91099188cf
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_code
+		dataType: string
+		lineageTag: a79a9350-1a34-4654-b5ea-5d6e82c6e8dd
+		summarizeBy: none
+		sourceColumn: customer_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		queryGroup: Dimensions
+		source =
+				let
+				    Source = MySQL.Database("localhost", "gdb041", [ReturnSingleDatabase=true]),
+				    gdb041_dim_customer = Source{[Schema="gdb041",Item="dim_customer"]}[Data],
+				    #"Replaced Value" = Table.ReplaceValue(gdb041_dim_customer,"Atliq Exclusive","AtliQ Exclusive",Replacer.ReplaceText,{"channel"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Replaced Value", each true),
+				    #"Replaced Value1" = Table.ReplaceValue(
+				    #"Replaced Value",
+				    each [channel],
+				    each if [customer_code] = "90002011" then "Direct" else [channel],
+				    Replacer.ReplaceText,
+				    {"channel"}
+				),
+				    #"Trimmed Text" = Table.TransformColumns(#"Replaced Value1",{{"customer", Text.Trim, type text}}),
+				    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"customer", Text.Clean, type text}})
+				in
+				    #"Cleaned Text"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

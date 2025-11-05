@@ -1,0 +1,161 @@
+relationship 35402930-8808-498c-9a4a-6e23ef33a75d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'dim date'.date
+	toColumn: LocalDateTable_05413977-bcc2-4ba7-88dd-57900f932477.Date
+
+relationship 78ce6dfd-5840-4e4d-9cce-e5b683f60f35
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'dim date'.month
+	toColumn: LocalDateTable_69857bd1-cf3e-4e27-b0da-c3b1ba6f365f.Date
+
+relationship a34daaad-a682-4ed1-ba66-4226c084d859
+	joinOnDateBehavior: datePartOnly
+	fromColumn: last_date.last_date
+	toColumn: LocalDateTable_1607f13f-7921-4e21-938b-ce6952c54626.Date
+
+relationship deb2ac8f-df80-50ff-1b78-7af4228af1fa
+	fromColumn: fact_forecast_monthly.date
+	toColumn: 'dim date'.date
+
+relationship 03ca9d9c-c659-df29-b6e0-c9c849e9788d
+	fromColumn: fact_sales_actual_rem.date
+	toColumn: 'dim date'.date
+
+relationship ae87af60-b9e8-9363-37df-fcc6f15b4c9b
+	fromColumn: post_invoice_deductions.date
+	toColumn: 'dim date'.date
+
+relationship 189cb995-a59c-686a-bfe7-36510f71dd90
+	crossFilteringBehavior: bothDirections
+	fromColumn: fact_forecast_monthly.customer_code
+	toColumn: dim_customer.customer_code
+
+relationship a55ae1c2-ce46-c370-0e35-56ca7247203b
+	fromColumn: fact_sales_actual_rem.customer_code
+	toColumn: dim_customer.customer_code
+
+relationship ce3bfb39-4318-96fa-6b2b-a78cb707a070
+	fromColumn: post_invoice_deductions.customer_code
+	toColumn: dim_customer.customer_code
+
+relationship 334479ad-5631-037b-be0e-e84925526696
+	fromColumn: fact_forecast_monthly.product_code
+	toColumn: dim_product.product_code
+
+relationship d816aa1a-4a36-b113-8f47-ed9274e4cc31
+	fromColumn: fact_sales_actual_rem.product_code
+	toColumn: dim_product.product_code
+
+relationship 4b2cb414-ec81-e3ff-2a22-59d2fa5e558e
+	fromColumn: post_invoice_deductions.product_code
+	toColumn: dim_product.product_code
+
+relationship f3a44b80-02ab-94dc-fc84-8549a9c88e41
+	fromColumn: manufacturing_cost.product_code
+	toColumn: dim_product.product_code
+
+relationship 79a86790-6807-3b78-6485-f8b9b7fdbe08
+	fromColumn: dim_customer.market
+	toColumn: dim_market.market
+
+relationship 703090b4-63cf-6d50-5778-55a73b212e19
+	fromColumn: freight_cost.market
+	toColumn: dim_market.market
+
+relationship 27d638c7-1f83-fc45-217c-4b1be244d1e1
+	fromColumn: 'dim date'.'Fiscal Year'
+	toColumn: fiscal_year.Fiscal_year
+
+relationship 669ef30d-dda2-1544-fae6-123ad7f30b46
+	fromColumn: freight_cost.fiscal_year
+	toColumn: fiscal_year.Fiscal_year
+
+relationship 38a0e69b-7ed6-38fc-f5c6-d749e072dbe1
+	fromColumn: manufacturing_cost.cost_year
+	toColumn: fiscal_year.Fiscal_year
+
+relationship AutoDetected_89b6ae82-1879-40d4-b0d7-8364502b2c56
+	fromColumn: operational_cost.market
+	toColumn: dim_market.market
+
+relationship 9c4f7d47-b108-f2cc-01e1-d4983241ecfe
+	fromColumn: operational_cost.fiscal_year
+	toColumn: fiscal_year.Fiscal_year
+
+relationship bb0b4233-35e0-baf3-13b8-c821aaf81aef
+	fromColumn: marketshare.fy
+	toColumn: fiscal_year.Fiscal_year
+
+relationship b679c0d4-92a5-57de-7b5d-03f67991b9a2
+	fromColumn: dim_market.sub_zone
+	toColumn: Subzone.sub_zone
+
+relationship 4010e274-6b35-e9eb-81e1-56d1c61927b1
+	fromColumn: marketshare.sub_zone
+	toColumn: Subzone.sub_zone
+
+relationship 5bbe0e1d-28b5-688e-aa87-a487c6276f9c
+	fromColumn: dim_product.category
+	toColumn: 'Category Unique'.category
+
+relationship a0d89881-e71f-ac50-67e9-8111ee609fc9
+	fromColumn: marketshare.category
+	toColumn: 'Category Unique'.category
+
+relationship 0bfb280d-ff10-4bfe-af40-16448d291de1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Report Refresh Date'.'Last Refresh'
+	toColumn: LocalDateTable_f0fc15c7-ed9b-4bf4-991a-7668dc60fec6.Date
+
+relationship 8f5ccb48-a080-41a4-2c0f-fc734997c252
+	fromColumn: NsGmTarget.month
+	toColumn: 'dim date'.date
+
+relationship 1767be87-3f5c-1bb4-5758-e658412fbc3f
+	fromColumn: NsGmTarget.market
+	toColumn: dim_market.market
+
+relationship dd1b2eba-dbe0-4741-aa8b-81d23437c440
+	joinOnDateBehavior: datePartOnly
+	fromColumn: remaining_dates.date
+	toColumn: LocalDateTable_87e7e20e-e360-495d-a95a-380c4d806c39.Date
+
+relationship AutoDetected_e035f5e1-f435-4278-89db-237e82826038
+	fromColumn: pre_invoice_deductions.customer_code
+	toColumn: dim_customer.customer_code
+
+relationship AutoDetected_500ed4dc-297c-49e0-9b69-f79b7fae2169
+	fromColumn: remaining_dates.customer_code
+	toColumn: dim_customer.customer_code
+
+relationship AutoDetected_9674e8e2-05eb-47ed-a9e4-fd1e3c5da989
+	fromColumn: gross_price.product_code
+	toColumn: dim_product.product_code
+
+relationship AutoDetected_f62fc607-9fb4-46ea-9d43-f6036ad0e507
+	fromColumn: remaining_dates.product_code
+	toColumn: dim_product.product_code
+
+relationship AutoDetected_ccc70c10-30c8-43c2-b7c6-43157a037f81
+	isActive: false
+	fromColumn: fact_sales_actual_rem.gross_price
+	toColumn: gross_price.gross_price
+
+relationship AutoDetected_6c0da3f3-82d6-4229-a023-406661b780b5
+	isActive: false
+	fromColumn: fact_sales_actual_rem.pre_invoice_discount_pct
+	toColumn: pre_invoice_deductions.pre_invoice_discount_pct
+
+relationship 67bea314-3de5-4704-8464-8a91051e27f1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_sales_monthly.date
+	toColumn: LocalDateTable_2a40d510-0252-4f9b-a1c5-1003736c5092.Date
+
+relationship AutoDetected_e24a74e4-9670-4169-80ef-22dc98b32407
+	fromColumn: fact_sales_monthly.customer_code
+	toColumn: dim_customer.customer_code
+
+relationship AutoDetected_760fd228-bfbb-4eb7-a2ff-4da7f27ff99b
+	fromColumn: fact_sales_monthly.product_code
+	toColumn: dim_product.product_code
+

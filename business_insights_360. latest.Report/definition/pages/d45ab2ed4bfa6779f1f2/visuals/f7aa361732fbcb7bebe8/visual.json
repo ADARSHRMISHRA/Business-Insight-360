@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "f7aa361732fbcb7bebe8",
+  "position": {
+    "x": 389.07710433302788,
+    "y": 119.43762272548763,
+    "z": 34000,
+    "height": 903.02081424270193,
+    "width": 1530.973164026705,
+    "tabOrder": 33000
+  },
+  "visualGroup": {
+    "displayName": "market_view",
+    "groupMode": "ScaleMode"
+  },
+  "isHidden": true
+}

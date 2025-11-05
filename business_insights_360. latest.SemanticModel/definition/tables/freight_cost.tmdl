@@ -1,0 +1,53 @@
+table freight_cost
+	lineageTag: 024dfeaf-8203-4eab-b797-3b2b5f8e5fd8
+
+	column market
+		dataType: string
+		lineageTag: e971ce68-2b5f-41d5-b2a0-cdd989f2787c
+		summarizeBy: none
+		sourceColumn: market
+
+		annotation SummarizationSetBy = Automatic
+
+	column fiscal_year
+		dataType: string
+		lineageTag: 7ee071ca-96dd-48e9-972c-abe6ef4ef12a
+		summarizeBy: none
+		sourceColumn: fiscal_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column freight_pct
+		dataType: double
+		lineageTag: 7acc2daa-96d1-44ee-915f-09dba6b507a2
+		summarizeBy: sum
+		sourceColumn: freight_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_cost_pct
+		dataType: double
+		lineageTag: 75e37206-072d-4a5b-8d6d-be17f60c52d7
+		summarizeBy: sum
+		sourceColumn: other_cost_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition freight_cost = m
+		mode: import
+		queryGroup: supported_facts
+		source =
+				let
+				    Source = MySQL.Database("localhost", "gdb056", [ReturnSingleDatabase=true]),
+				    gdb056_freight_cost = Source{[Schema="gdb056",Item="freight_cost"]}[Data]
+				in
+				    gdb056_freight_cost
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

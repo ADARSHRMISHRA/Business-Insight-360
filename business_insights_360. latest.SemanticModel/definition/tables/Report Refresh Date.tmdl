@@ -1,0 +1,35 @@
+table 'Report Refresh Date'
+	lineageTag: 0e420bbf-c551-4ae6-8f65-7c44c22e764d
+
+	column 'Last Refresh'
+		dataType: dateTime
+		formatString: dddd\, d mmmm\, yyyy
+		lineageTag: 1c37ba91-fb0d-4fc0-8179-c7f0042d7af2
+		summarizeBy: none
+		sourceColumn: Last Refresh
+
+		variation Variation
+			isDefault
+			relationship: 0bfb280d-ff10-4bfe-af40-16448d291de1
+			defaultHierarchy: LocalDateTable_f0fc15c7-ed9b-4bf4-991a-7668dc60fec6.'Date Hierarchy'
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	partition 'Report Refresh Date' = m
+		mode: import
+		queryGroup: Dimensions
+		source =
+				let
+				    RefreshDate = DateTime.LocalNow(),
+				    ToTable = #table({"Last Refresh"}, {{RefreshDate}})
+				in
+				    ToTable
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,48 @@
+table 'prm list marketing'
+	lineageTag: a187473e-bd5b-4596-b87b-a1b6cb5923cb
+
+	column 'prm list marketing'
+		lineageTag: f0c9cc4d-a698-42d8-b7da-f0cf06448bba
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'prm list marketing Order'
+
+		relatedColumnDetails
+			groupByColumn: 'prm list marketing Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'prm list marketing Fields'
+		isHidden
+		lineageTag: 66717cc8-9d0b-464d-9d72-da37748d334c
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'prm list marketing Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'prm list marketing Order'
+		isHidden
+		formatString: 0
+		lineageTag: 2fe0345a-2b72-42e3-8296-dc777d39bbb9
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'prm list marketing' = calculated
+		mode: import
+		source =
+				{
+				    ("Market", NAMEOF('dim_market'[market]), 0),
+				    ("Region", NAMEOF('dim_market'[region]), 1)
+				}
+
+	annotation PBI_Id = 0052251c25be45de898d3423a32465a3
+

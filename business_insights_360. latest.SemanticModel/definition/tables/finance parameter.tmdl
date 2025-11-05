@@ -1,0 +1,48 @@
+table 'finance parameter'
+	lineageTag: 3aadb3e9-3885-40c7-a66a-a6b2a2d770c7
+
+	column 'SECONDARY Parameter'
+		lineageTag: 39e16092-204c-4dbb-8bba-e2a02b56115c
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'SECONDARY Parameter Order'
+
+		relatedColumnDetails
+			groupByColumn: 'SECONDARY Parameter Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SECONDARY Parameter Fields'
+		isHidden
+		lineageTag: 21d8e9bb-db5d-4219-9d85-bb0466d85160
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'SECONDARY Parameter Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SECONDARY Parameter Order'
+		isHidden
+		formatString: 0
+		lineageTag: 0b1d50ae-ddf5-4182-b953-8b5163e119d8
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'finance parameter' = calculated
+		mode: import
+		source =
+				{
+				    ("REGION", NAMEOF('dim_market'[region]), 0),
+				    ("CATEGORY", NAMEOF(dim_product[category]), 1)
+				}
+
+	annotation PBI_Id = 34f6418333e2492daf15c5409e733d0a
+

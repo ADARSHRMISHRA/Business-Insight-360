@@ -1,0 +1,75 @@
+table marketshare
+	lineageTag: 1d250500-33d6-4174-bad2-6118fbee1692
+
+	column sub_zone
+		dataType: string
+		lineageTag: f4eb3b9c-876e-4b3c-b07c-5a63a0e6c02c
+		summarizeBy: none
+		sourceColumn: sub_zone
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: 0a1c6471-524f-4c0d-9d33-2b83fafe1d74
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column fy
+		dataType: string
+		lineageTag: 088b0426-2f52-4233-b109-eb65e7abb7c8
+		summarizeBy: none
+		sourceColumn: fy
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_market_sales_$
+		dataType: double
+		lineageTag: a0028a84-1055-448b-9688-025b29b74a56
+		summarizeBy: sum
+		sourceColumn: total_market_sales_$
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Manufacturers
+		dataType: string
+		lineageTag: cff2ec3a-5a35-4e29-b330-00c3c9348197
+		summarizeBy: none
+		sourceColumn: Manufacturers
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sales
+		dataType: double
+		lineageTag: c4c288af-34ee-4e76-989e-f28f8f89b88b
+		summarizeBy: sum
+		sourceColumn: Sales
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition marketshare = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\adars\Downloads\marketshare-v2022.xlsx"), null, true),
+				    marketshare_Table = Source{[Item="marketshare",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(marketshare_Table,{{"sub_zone", type text}, {"category", type text}, {"fy_desc", Int64.Type}, {"total_market_sales_$", type number}, {"atliq_sales_$", type number}, {"dale_sales_$", type number}, {"innovo_sales_$", type number}, {"pacer_sales_$", type number}, {"bp_sales_$", type number}, {"others_sales_$", type number}}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Changed Type",{"sub_zone", "category", "fy_desc", "total_market_sales_$", "pacer_sales_$", "atliq_sales_$", "dale_sales_$", "innovo_sales_$", "bp_sales_$", "others_sales_$"}),
+				    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Reordered Columns", {"sub_zone", "category", "fy_desc", "total_market_sales_$"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Manufacturers"}, {"Value", "Sales"}}),
+				    #"Extracted Text Before Delimiter" = Table.TransformColumns(#"Renamed Columns", {{"Manufacturers", each Text.BeforeDelimiter(_, "_"), type text}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Extracted Text Before Delimiter",{{"fy_desc", "fy"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns1",{{"fy", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

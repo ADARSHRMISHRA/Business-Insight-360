@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "939a6407c3061a05c125",
+  "position": {
+    "x": 0,
+    "y": 413.21739130434781,
+    "z": 1000,
+    "height": 281.04347826086956,
+    "width": 90.434782608695656,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Subzone"
+                    }
+                  },
+                  "Property": "sub_zone"
+                }
+              },
+              "queryRef": "Subzone.sub_zone",
+              "nativeQueryRef": "sub_zone"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

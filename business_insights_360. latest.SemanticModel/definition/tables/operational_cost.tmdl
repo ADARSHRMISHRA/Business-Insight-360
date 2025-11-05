@@ -1,0 +1,53 @@
+table operational_cost
+	lineageTag: 5af298ba-3378-4dd4-aa2c-34b7086d3a52
+
+	column market
+		dataType: string
+		lineageTag: ad1e384e-2722-462e-a330-f8e4d4e93a37
+		summarizeBy: none
+		sourceColumn: market
+
+		annotation SummarizationSetBy = Automatic
+
+	column fiscal_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 07e3cd2d-891f-4ffe-803d-14f2fc575e78
+		summarizeBy: none
+		sourceColumn: fiscal_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column ads_promotions_pct
+		dataType: double
+		lineageTag: efb25f9a-3fb0-4246-a153-6432ea6e2672
+		summarizeBy: sum
+		sourceColumn: ads_promotions_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_operational_expense_pct
+		dataType: double
+		lineageTag: fb82fbfe-7722-40fb-a402-5640e0232915
+		summarizeBy: sum
+		sourceColumn: other_operational_expense_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition operational_cost = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\adars\Downloads\operating-expenses-table-1.xlsx"), null, true),
+				    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"market", type text}, {"fiscal_year", Int64.Type}, {"ads_promotions_pct", type number}, {"other_operational_expense_pct", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

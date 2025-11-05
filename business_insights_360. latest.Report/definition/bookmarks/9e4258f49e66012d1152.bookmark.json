@@ -1,0 +1,45 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.4.0/schema.json",
+  "displayName": "marketing Show GM %",
+  "name": "9e4258f49e66012d1152",
+  "options": {
+    "targetVisualNames": [
+      "fd61464b2860eb5c00a3"
+    ],
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "8a7997c7e46ef089d12f",
+    "sections": {
+      "8a7997c7e46ef089d12f": {
+        "visualContainers": {},
+        "visualContainerGroups": {
+          "ef28d46377a9091ab62d": {
+            "isHidden": false
+          },
+          "05e28be8ed0452cb78bc": {
+            "isHidden": true
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "true"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
